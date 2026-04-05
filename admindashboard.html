@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Management</title>
+   <style>
+    
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    }
+
+    body {
+       
+        background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    
+    .container {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        width: 100%;
+        max-width: 900px;
+    }
+
+    h1 {
+        color: #1a1a1a;
+        font-size: 28px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+        margin-bottom: 5px;
+    }
+
+    p {
+        color: #666;
+        margin-bottom: 30px;
+        font-weight: 500;
+        border-bottom: 2px solid #27ae60;
+        display: inline-block;
+        padding-bottom: 5px;
+    }
+
+    
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px; 
+        margin-top: 10px;
+    }
+
+    th {
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 1px;
+        color: #888;
+        padding: 10px 15px;
+        text-align: left;
+    }
+
+    td {
+        background: #fdfdfd;
+        padding: 15px;
+        color: #333;
+        font-weight: 500;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+    }
+
+    
+    td:first-child { border-left: 1px solid #eee; border-radius: 8px 0 0 8px; }
+    td:last-child { border-right: 1px solid #eee; border-radius: 0 8px 8px 0; }
+
+   
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+
+    .status-approved {
+        background: #d4edda;
+        color: #155724;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+
+    
+    button {
+        padding: 10px 18px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-approve {
+        background-color: #27ae60;
+        color: white;
+    }
+
+    .btn-approve:hover {
+        background-color: #2ecc71;
+        transform: translateY(-2px);
+    }
+
+    .btn-suspend {
+        background-color: #e74c3c;
+        color: white;
+    }
+
+    .btn-suspend:hover {
+        background-color: #ff5e4d;
+        transform: translateY(-2px);
+    }
+
+    
+    .btn-logout-container {
+        text-align: right;
+        margin-top: 30px;
+    }
+
+    .btn-logout {
+        background: #1e3d33;
+        color: white;
+        padding: 12px 25px;
+    }
+
+    .btn-logout:hover {
+        background: #000;
+    }
+</style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <p>Manage User Access Permissions</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Current Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                </tbody>
+        </table>
+
+        <br>
+        <button onclick="adminLogout()">Logout Admin</button>
+    </div>
+
+    <script>
+
+
+    if (sessionStorage.getItem("isAdminLoggedIn") !== "true") {
+     
+        alert("Nice try! Please login as Admin first.");
+        window.location.href = "adminlogin.html"; 
+    }
+
+       
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+      
+        function renderTable() {
+            let tableBody = document.getElementById('userTableBody');
+            tableBody.innerHTML = ""; 
+
+            users.forEach((user, index) => {
+                let row = `
+                    <tr>
+                        <td>${user.email}</td>
+                        <td class="status-${user.status}">${user.status.toUpperCase()}</td>
+                        <td>
+                            ${user.status === 'pending' 
+                                ? `<button class="btn-approve" onclick="toggleStatus(${index})">Approve User</button>` 
+                                : `<button class="btn-suspend" onclick="toggleStatus(${index})">Suspend User</button>`
+                            }
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+
+   
+        function toggleStatus(index) {
+            users[index].status = (users[index].status === 'pending') ? 'approved' : 'pending';
+            localStorage.setItem('users', JSON.stringify(users));
+            renderTable();
+        }
+
+     
+        function adminLogout() {
+            sessionStorage.removeItem("isAdminLoggedIn");
+            window.location.href = "adminlogin.html";
+        }
+
+       
+        renderTable();
+    </script>
+
+</body>
+</html>

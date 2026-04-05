@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      
+        background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+        background-attachment: fixed;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+  
+    .signup-container {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+    }
+
+    h1 {
+        margin-bottom: 30px;
+        color: #1a1a1a;
+        font-size: 26px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+        border-bottom: 3px solid #27ae60;
+        display: inline-block;
+        padding-bottom: 5px;
+    }
+
+    
+    .form-group {
+        text-align: left;
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 700;
+        color: #444;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    input {
+        width: 100%;
+        padding: 14px 15px;
+        border: 2px solid #eef0f2;
+        border-radius: 6px;
+        font-size: 15px;
+        background-color: #f8f9fa;
+        transition: all 0.2s ease;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #27ae60;
+        background-color: #fff;
+        box-shadow: 0 0 8px rgba(39, 174, 96, 0.15);
+    }
+
+   
+    button {
+        width: 100%;
+        padding: 14px;
+        background-color: #1e3d33; /* Dark Forest */
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    button:hover {
+        background-color: #27ae60; /* Vibrant Green */
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+
+    .login-link {
+        display: inline-block;
+        margin-top: 25px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        color: #27ae60;
+        transition: color 0.2s;
+    }
+
+    .login-link:hover {
+        color: #1e3d33;
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+
+
+    <body>
+
+    <div class="signup-container">
+        <h1>Create Account</h1>
+        
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Enter your email">
+        </div>
+
+        <div class="form-group">
+            <label for="pass">Password</label>
+            <input type="password" id="pass" placeholder="Create a password">
+        </div>
+
+        <button onclick="handleSignup()">Create Account</button>
+        
+        <a href="/login.html" class="login-link">Already have an account? Login</a>
+    </div>
+
+    </body>
+
+
+
+
+<script>
+    
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+
+    function handleSignup() {
+
+    let userEmail = document.getElementById("email").value;
+    let userPassword = document.getElementById('pass').value;
+
+    if(userEmail === '' || userPassword === ''){
+        alert('Please fill the required details.');
+        return;
+    }
+    
+
+    
+
+    let existingUser = users.find(u => u.email === userEmail);
+    if(existingUser) {
+        alert('The email address is already regestired');
+        return;
+        
+    }
+
+    let newUser = {
+        email : userEmail,
+        password : userPassword,
+        status : 'pending'
+    }
+
+    users.push(newUser);
+    localStorage.setItem('users',JSON.stringify(users));
+
+    document.getElementById('email').value = '';
+    document.getElementById('pass').value = '';
+
+    alert('Account created successfully')
+
+    window.location.href = '/login.html'
+    
+    }
+
+
+</script>
+</body>
+</html>
